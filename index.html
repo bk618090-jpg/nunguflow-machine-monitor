@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0b6b57" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <title>NunguFlow · Machine Monitor</title>
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="icon" href="icon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar" aria-label="Primary navigation">
+        <a class="brand" href="#dashboard"><span class="brand-mark">N</span><span>Nungu<span>Flow</span></span></a>
+        <p class="nav-label">Operations</p>
+        <nav>
+          <button class="nav-item active" data-view="dashboard">⌂ <span>Dashboard</span></button>
+          <button class="nav-item" data-view="production">◉ <span>Production</span></button>
+          <button class="nav-item" data-view="sales">▣ <span>Sales</span></button>
+          <button class="nav-item" data-view="stock">▤ <span>Stock</span></button>
+          <button class="nav-item" data-view="quality">✓ <span>Quality</span></button>
+          <button class="nav-item" data-view="reports">▥ <span>Reports</span></button>
+        </nav>
+        <div class="sidebar-bottom"><button class="nav-item" data-view="settings">⚙ <span>Settings</span></button><div class="user-chip"><span>BM</span><div><strong>Bharathkumar M</strong><small>Supervisor</small></div></div></div>
+      </aside>
+
+      <main>
+        <header class="topbar"><button class="menu-button" aria-label="Toggle navigation">☰</button><div><p class="eyebrow" id="page-eyebrow">Tuesday, 21 October</p><h1 id="page-title">Good morning, Bharathkumar</h1></div><div class="header-actions"><button class="date-button">▣ <span>Today</span></button><button class="bell" aria-label="Notifications">♧<i></i></button></div></header>
+
+        <section id="dashboard" class="view active">
+          <div class="live-strip"><span class="pulse"></span><strong>Machine CUT-01 is running</strong><span class="muted">Last sensor signal <span id="last-signal">just now</span></span><button id="simulate-event" class="text-button">Simulate sensor event</button><span class="sim-badge">DEMO DATA</span></div>
+          <div class="stat-grid">
+            <article class="metric"><div class="metric-label">Today's cut count <span class="icon green">◒</span></div><strong id="cut-count">1,248</strong><span class="trend up">↑ 12.4% <em>vs. yesterday</em></span></article>
+            <article class="metric"><div class="metric-label">Good output <span class="icon blue">✓</span></div><strong id="good-output">1,176</strong><span class="trend up"><span id="good-rate">94.2%</span> <em>of cut count</em></span></article>
+            <article class="metric"><div class="metric-label">Today's sales <span class="icon gold">₹</span></div><strong id="today-sales">₹8,640</strong><span class="trend up">↑ 8.1% <em>vs. yesterday</em></span></article>
+            <article class="metric"><div class="metric-label">Estimated profit <span class="icon purple">↗</span></div><strong id="profit">₹3,212</strong><span class="trend up"><span id="profit-rate">37.2%</span> <em>sales margin</em></span></article>
+          </div>
+          <div class="dashboard-grid">
+            <article class="panel production-panel"><div class="panel-heading"><div><h2>Production today</h2><p>Accepted versus rejected output</p></div><button class="ghost-button" data-view="production">View details →</button></div><div class="chart-row"><div class="bar-chart" id="bar-chart" aria-label="Production chart"></div><div class="chart-legend"><p><i class="legend good"></i>Accepted <strong id="accepted-legend">1,176</strong></p><p><i class="legend reject"></i>Rejected <strong id="rejected-legend">72</strong></p></div></div><div class="machine-summary"><span class="status-dot"></span><div><strong>CUT-01 · Main line</strong><small>Batch B-20261021-A · Shift A</small></div><b>48 <small>cuts/min</small></b></div></article>
+            <article class="panel quality-panel"><div class="panel-heading"><div><h2>Quality snapshot</h2><p>Latest 100-piece sample</p></div><button class="ghost-button" data-view="quality">Log check →</button></div><div class="quality-score"><div class="ring" id="quality-ring"><span id="quality-score">92%</span></div><div><strong>Grade A</strong><p id="quality-detail">92 accepted · 8 rejected</p><span class="tag positive">Within target</span></div></div><div class="defect-row"><span>Top issue</span><strong>Shell residue <b>5</b></strong></div></article>
+            <article class="panel activity-panel"><div class="panel-heading"><div><h2>Live activity</h2><p>Latest production events</p></div><span class="live-label"><i></i> Live</span></div><ol id="activity-list" class="activity-list"></ol></article>
+            <article class="panel stock-panel"><div class="panel-heading"><div><h2>Stock alerts</h2><p>Products requiring attention</p></div><button class="ghost-button" data-view="stock">Open stock →</button></div><div id="stock-alerts"></div></article>
+          </div>
+        </section>
+
+        <section id="production" class="view"><div class="section-heading"><div><p class="eyebrow">Operational record</p><h2>Production</h2><p>Sensor count and accepted/rejected output by batch.</p></div><button class="primary-button" id="add-production">+ Record manual check</button></div><div class="notice"><strong>Integration status:</strong> simulated feed only. Confirm PLC/sensor tags and an approved read-only interface before displaying real automatic counts.</div><article class="panel table-panel"><table><thead><tr><th>Time</th><th>Batch</th><th>Source</th><th>Accepted</th><th>Rejected</th><th>Operator</th></tr></thead><tbody id="production-table"></tbody></table></article></section>
+        <section id="sales" class="view"><div class="section-heading"><div><p class="eyebrow">Revenue</p><h2>Sales</h2><p>Sales automatically reduce finished-goods stock in this prototype.</p></div><button class="primary-button" id="add-sale">+ New sale</button></div><div class="three-metrics"><article class="metric"><div class="metric-label">Revenue today</div><strong id="sales-revenue">₹8,640</strong></article><article class="metric"><div class="metric-label">Cost of goods</div><strong id="sales-cost">₹5,428</strong></article><article class="metric"><div class="metric-label">Gross profit</div><strong id="sales-profit">₹3,212</strong></article></div><article class="panel table-panel"><table><thead><tr><th>Invoice</th><th>Time</th><th>Customer</th><th>Payment</th><th>Total</th></tr></thead><tbody id="sales-table"></tbody></table></article></section>
+        <section id="stock" class="view"><div class="section-heading"><div><p class="eyebrow">Inventory</p><h2>Stock</h2><p>Current saleable inventory and reorder guidance.</p></div><button class="primary-button" id="adjust-stock">+ Stock adjustment</button></div><article class="panel table-panel"><table><thead><tr><th>Product</th><th>On hand</th><th>Reorder level</th><th>Unit cost</th><th>Value</th><th>Status</th></tr></thead><tbody id="stock-table"></tbody></table></article></section>
+        <section id="quality" class="view"><div class="section-heading"><div><p class="eyebrow">Inspection</p><h2>Kernel quality</h2><p>Record sampled output by batch; automated vision grading is not assumed.</p></div><button class="primary-button" id="add-quality">+ Record inspection</button></div><article class="panel table-panel"><table><thead><tr><th>Time</th><th>Batch</th><th>Sample</th><th>Pass</th><th>Grade</th><th>Issue</th></tr></thead><tbody id="quality-table"></tbody></table></article></section>
+        <section id="reports" class="view"><div class="section-heading"><div><p class="eyebrow">Decision support</p><h2>Reports</h2><p>Period reports should be calculated on the server in the production system.</p></div><button class="primary-button" id="export-report">⇩ Export demo CSV</button></div><div class="report-grid"><article class="panel"><h3>Daily operating report</h3><p>Cut count, accepted/rejected output, quality samples, downtime, and reconciliation variance.</p><button class="ghost-button view-report" data-report="operations">View report →</button></article><article class="panel"><h3>Sales & profit report</h3><p>Revenue, discounts, cost snapshots, expenses, gross and net profit by date/product.</p><button class="ghost-button view-report" data-report="sales">View report →</button></article><article class="panel"><h3>Stock & traceability</h3><p>Stock movements, low-stock items, batch links, and quality history.</p><button class="ghost-button view-report" data-report="stock">View report →</button></article></div></section>
+        <section id="settings" class="view"><div class="section-heading"><div><p class="eyebrow">Prototype controls</p><h2>Settings</h2><p>Browser-only demo configuration.</p></div></div><article class="panel settings-card"><h3>Machine data source</h3><p><span class="tag warning">Simulation</span> The dashboard is using local sample events. A real deployment requires a vendor-confirmed, read-only controller/sensor connection.</p><h3>Reset prototype</h3><p>Restores sample production, sales, stock, and quality data stored in this browser.</p><button class="danger-button" id="reset-demo">Reset demo data</button></article></section>
+      </main>
+      <nav class="mobile-nav" aria-label="Mobile navigation">
+        <button class="active" data-view="dashboard"><b>⌂</b><span>Home</span></button>
+        <button data-view="production"><b>◉</b><span>Production</span></button>
+        <button data-view="sales"><b>▣</b><span>Sales</span></button>
+        <button data-view="quality"><b>✓</b><span>Quality</span></button>
+        <button data-view="reports"><b>▥</b><span>Reports</span></button>
+      </nav>
+    </div>
+    <dialog id="entry-dialog"><form method="dialog" id="entry-form"><div class="dialog-header"><h2 id="dialog-title">Add record</h2><button class="close-button" value="cancel" aria-label="Close">×</button></div><div id="form-fields" class="form-fields"></div><div class="dialog-actions"><button class="ghost-button" value="cancel">Cancel</button><button class="primary-button" id="save-entry" value="default">Save record</button></div></form></dialog>
+    <dialog id="report-dialog"><div class="dialog-header"><div><p class="eyebrow">Today's demo data</p><h2 id="report-title">Report</h2></div><button class="close-button" id="close-report" aria-label="Close">×</button></div><div id="report-content"></div><div class="dialog-actions"><button class="ghost-button" id="close-report-bottom">Close</button><button class="primary-button" id="download-specific-report">⇩ Download CSV</button></div></dialog>
+    <div id="toast" role="status" aria-live="polite"></div>
+    <script src="app.js"></script>
+    <script>if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');</script>
+  </body>
+</html>
