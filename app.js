@@ -39,15 +39,13 @@ const escapeHTML = value => String(value).replace(/[&<>'"]/g, c => ({ '&':'&amp;
 function setText(id, value) { el(id).textContent = value; }
 function showToast(message) { const toast = el('toast'); toast.textContent = message; toast.classList.add('show'); setTimeout(() => toast.classList.remove('show'), 2600); }
 function renderBars() {
-  el('bar-chart').innerHTML = chartSeries.map(([accepted, rejected], index) => `<div class="bar-group" data-label="${8 + index}:00" style="--bar-delay:${index * 70}ms"><i class="bar good" style="--bar-height:${accepted}%" aria-label="${accepted} accepted"></i><i class="bar reject" style="--bar-height:${rejected}%" aria-label="${rejected} rejected"></i></div>`).join('');
+  el('bar-chart').innerHTML = chartSeries.map(([accepted, rejected], index) => `<div class="bar-group ${index === chartSeries.length - 1 ? 'current' : ''}" data-label="${8 + index}:00" style="--bar-delay:${index * 70}ms"><i class="bar good" style="--bar-height:${accepted}%" aria-label="${accepted} accepted"></i><i class="bar reject" style="--bar-height:${rejected}%" aria-label="${rejected} rejected"></i></div>`).join('');
 }
 function animateChart() {
-  chartSeries.forEach((point, index) => {
-    const wave = index % 2 ? -1 : 1;
-    const drift = wave * (3 + Math.floor(Math.random() * 5));
-    point[0] = Math.max(28, Math.min(96, point[0] + drift));
-    point[1] = Math.max(8, Math.min(62, 100 - point[0] + Math.floor(Math.random() * 8) - 4));
-  });
+  const current = chartSeries.at(-1);
+  const drift = Math.floor(Math.random() * 13) - 6;
+  current[0] = Math.max(35, Math.min(96, current[0] + drift));
+  current[1] = Math.max(8, Math.min(62, 100 - current[0] + Math.floor(Math.random() * 8) - 4));
   renderBars();
 }
 function renderDashboard() {
