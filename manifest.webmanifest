@@ -1,6 +1,6 @@
 {
-  "name": "NunguFlow Machine Monitor",
-  "short_name": "NunguFlow",
+  "name": "ICEX Machine Monitor",
+  "short_name": "ICEX",
   "description": "Ice apple cutting machine monitoring dashboard.",
   "start_url": "./index.html",
   "display": "standalone",
