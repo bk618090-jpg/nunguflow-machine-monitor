@@ -42,10 +42,12 @@ function renderBars() {
   el('bar-chart').innerHTML = chartSeries.map(([accepted, rejected], index) => `<div class="bar-group" data-label="${8 + index}:00" style="--bar-delay:${index * 70}ms"><i class="bar good" style="--bar-height:${accepted}%" aria-label="${accepted} accepted"></i><i class="bar reject" style="--bar-height:${rejected}%" aria-label="${rejected} rejected"></i></div>`).join('');
 }
 function animateChart() {
-  const index = Math.floor(Math.random() * chartSeries.length);
-  const drift = Math.floor(Math.random() * 13) - 6;
-  chartSeries[index][0] = Math.max(35, Math.min(96, chartSeries[index][0] + drift));
-  chartSeries[index][1] = Math.max(8, Math.min(62, 100 - chartSeries[index][0] + Math.floor(Math.random() * 8) - 4));
+  chartSeries.forEach((point, index) => {
+    const wave = index % 2 ? -1 : 1;
+    const drift = wave * (3 + Math.floor(Math.random() * 5));
+    point[0] = Math.max(28, Math.min(96, point[0] + drift));
+    point[1] = Math.max(8, Math.min(62, 100 - point[0] + Math.floor(Math.random() * 8) - 4));
+  });
   renderBars();
 }
 function renderDashboard() {
@@ -84,7 +86,7 @@ function saveForm(event) { if (event.submitter?.value === 'cancel') return; even
   persist(); renderAll(); el('entry-dialog').close(); showToast('Record saved in this browser demo.'); }
 function exportCSV() { const t = totals(); const csv = `Metric,Value\nCut count,${t.cut}\nAccepted,${t.accepted}\nRejected,${t.rejected}\nSales,${t.sales}\nCost,${t.cost}\nGross profit,${t.profit}\n`; const blob = new Blob([csv], {type:'text/csv'}); const a = document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='nungu-flow-demo-report.csv'; a.click(); URL.revokeObjectURL(a.href); showToast('Demo CSV downloaded.'); }
 document.querySelectorAll('[data-view]').forEach(button => button.addEventListener('click', () => { document.querySelectorAll('.view').forEach(v=>v.classList.remove('active')); document.querySelectorAll('.nav-item,.mobile-nav button').forEach(v=>v.classList.remove('active')); el(button.dataset.view).classList.add('active'); document.querySelector(`.nav-item[data-view="${button.dataset.view}"]`)?.classList.add('active'); document.querySelector(`.mobile-nav button[data-view="${button.dataset.view}"]`)?.classList.add('active'); setText('page-title', button.dataset.view === 'dashboard' ? 'Good morning, Bharathkumar' : button.textContent.trim()); document.querySelector('.sidebar').classList.remove('open'); window.scrollTo({top:0,behavior:'smooth'}); }));
-el('simulate-event').addEventListener('click', sensorEvent); el('add-production').addEventListener('click',()=>openForm('production')); el('add-sale').addEventListener('click',()=>openForm('sale')); el('adjust-stock').addEventListener('click',()=>openForm('stock')); el('add-quality').addEventListener('click',()=>openForm('quality')); el('entry-form').addEventListener('submit', saveForm); el('export-report').addEventListener('click', exportCSV); el('reset-demo').addEventListener('click',()=>{ if(confirm('Reset all prototype data stored in this browser?')) { state=structuredClone(initialState); persist(); renderAll(); showToast('Demo data reset.'); }}); document.querySelector('.menu-button').addEventListener('click',()=>document.querySelector('.sidebar').classList.toggle('open')); setInterval(renderDashboard, 1000); setInterval(animateChart, 5000); renderAll();
+el('simulate-event').addEventListener('click', sensorEvent); el('add-production').addEventListener('click',()=>openForm('production')); el('add-sale').addEventListener('click',()=>openForm('sale')); el('adjust-stock').addEventListener('click',()=>openForm('stock')); el('add-quality').addEventListener('click',()=>openForm('quality')); el('entry-form').addEventListener('submit', saveForm); el('export-report').addEventListener('click', exportCSV); el('reset-demo').addEventListener('click',()=>{ if(confirm('Reset all prototype data stored in this browser?')) { state=structuredClone(initialState); persist(); renderAll(); showToast('Demo data reset.'); }}); document.querySelector('.menu-button').addEventListener('click',()=>document.querySelector('.sidebar').classList.toggle('open')); setInterval(renderDashboard, 1000); setInterval(animateChart, 1200); renderAll();
 let activeReport = 'operations';
 function reportData(type) {
   const t = totals();
